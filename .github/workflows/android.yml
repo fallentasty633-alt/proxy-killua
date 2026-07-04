@@ -14,10 +14,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: set up JDK 17
+    - name: set up JDK 11
       uses: actions/setup-java@v4
       with:
-        java-version: '17'
+        java-version: '11'
         distribution: 'temurin'
         cache: gradle
 
@@ -25,17 +25,10 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew assembleDebug --info
-
-    - name: List files (Debug)
-      if: always()
-      run: |
-        find . -name "*.apk"
-        ls -R app/build/outputs/apk/ || true
+      run: ./gradlew assembleDebug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: "**/build/outputs/apk/debug/*.apk"
-        if-no-files-found: error
