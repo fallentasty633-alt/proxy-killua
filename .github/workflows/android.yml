@@ -22,13 +22,19 @@ jobs:
         cache: gradle
 
     - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+      run: |
+        sed -i 's/\r$//' gradlew
+        chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew assembleDebug
+      run: ./gradlew assembleDebug --stacktrace
+
+    - name: Find APK
+      if: always()
+      run: find . -name "*.apk"
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug
-        path: "**/build/outputs/apk/debug/*.apk"
+        path: "**/*.apk"
